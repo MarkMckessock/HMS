@@ -3,16 +3,21 @@
 #include "func.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "Reservation.h"
 
-Room* create_room(Hotel *hotel,int number,RoomType type) {
+void create_room(Hotel *hotel,int number,RoomType type, Room ***rooms, int *room_count) {
 	Room *room = (Room*)malloc(sizeof(Room));
 	room->hotel = hotel;
 	room->number = number;
 	room->type = type;
-	return room;
+	room->id = *room_count == 0 ? 1 : (*rooms)[*room_count - 1]->id + 1;
+	(*room_count)++;
+	*rooms = (Room**)realloc(*rooms, (*room_count) * sizeof(Room*));
+	(*rooms)[*room_count - 1] = room;
+	save_rooms_to_file(*rooms, *room_count);
 }
 
-Room* user_create_room(Hotel *hotel,int number,Room ***rooms,int *room_count) {
+void user_create_room(Hotel *hotel,int number,Room ***rooms,int *room_count) {
 	if (number) {
 		printf("Create Room #%i for hotel \"%s\":\n", number, hotel->name);
 	}
@@ -35,11 +40,7 @@ Room* user_create_room(Hotel *hotel,int number,Room ***rooms,int *room_count) {
 		type = suite;
 		break;
 	}
-	Room *room = create_room(hotel, number, type);
-	(*room_count)++;
-	*rooms = (Room**)realloc(*rooms, (*room_count) * sizeof(Room*));
-	(*rooms)[*room_count - 1] = room;
-	return room;
+	create_room(hotel, number, type,rooms,room_count);
 }
 
 void user_create_all_rooms(Room ***rooms, int *room_count, Hotel *hotel, int hotel_room_count) {
@@ -49,10 +50,14 @@ void user_create_all_rooms(Room ***rooms, int *room_count, Hotel *hotel, int hot
 	}
 }
 
-const char* get_room_status(Room *room) {
+bool get_room_status(Room *room,Reservation **reservations,int reservation_count,Date date) {
 	//TODO
-	const char *str = "Available";
-	return str;
+	for (int i = 0; i < reservation_count; i++) {
+		if (reservations[i]->room == room)
+			if (is_before(reservations[i]->start, date) && is_before(date, reservations[i]->end))
+				return false;
+	}
+	return true;
 }
 
 void edit_room(Room *room) {
@@ -86,4 +91,54 @@ void delete_room_by_index(Room ***rooms, int *room_count, int index) {
 	}
 	(*room_count)--;
 	*rooms = (Room**)realloc(*rooms, (*room_count) * sizeof(Room*));
+}
+
+void save_rooms_to_file(Room **rooms, int room_count) {
+	FILE *fp;
+	fopen_s(&fp, "rooms.txt", "w");
+	fprintf(fp, "Room Count: %i\n", room_count);
+	for (int i = 0; i < room_count; i++)
+		fprintf(fp, "%i,%i,%i,%i\n", rooms[i]->id,rooms[i]->number,rooms[i]->hotel->id,rooms[i]->type);
+	fclose(fp);
+}
+
+int load_rooms_from_file(Room ***rooms,Hotel **hotels,int hotel_count) {
+	int room_count = 0, i = 0;
+	FILE *fp;
+	fopen_s(&fp, "rooms.txt", "r");
+	if (fp) {
+		char line[81];
+		if (fgets(line, sizeof(line), fp)) {
+			line[strcspn(line, "\n")] = 0;
+			room_count = atoi(strstr(line, "Room Count: ") + 12);
+		}
+		while (fgets(line, sizeof(line), fp)) {
+			line[strcspn(line, "\n")] = 0; //strip newline character
+			Room *room = (Room *)malloc(sizeof(Room));
+			char** splits;
+			int count = 0;
+			splits = split(line, ",", &count);
+			room->id = atoi(splits[0]);
+			room->number = atoi(splits[1]);
+			room->hotel = get_hotel_by_id(hotels,hotel_count,atoi(splits[2]));
+			room->type = (RoomType)atoi(splits[3]);
+			(*rooms) = (Room **)realloc(*rooms, (i + 1) * sizeof(Room*));
+			(*rooms)[i] = room;
+			i++;
+		}
+		fclose(fp);
+		return room_count;
+	}
+	else {
+		return 0;
+	}
+}
+
+Room* get_room_by_id(Room **rooms,int room_count,int id) {
+	for (int i = 0; i < room_count; i++) {
+		if (rooms[i]->id == id) {
+			return rooms[i];
+		}
+	}
+	return NULL;
 }

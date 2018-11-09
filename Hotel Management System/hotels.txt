@@ -1,14 +1,5 @@
-Hotel Count: 13
-1,Test,12345 Test st
-2,Test,12345 Test St
-3,Test,12345 Test st
-4,Test,1234 Test r 24
-5,Test,12345 Test rd
-6,Test,12345 Test st
-7,Test,12345 Test st
-8,Test,12345 Test rd
-9,Test 1,12345 Test rd
-10,REEE,1234
-11,ret,21
-12,test,1234
-13,test,1234
+Hotel Count: 4
+1,Test,12345 Test st,50.000000,70.000000,100.000000
+2,Test,12345 Test St,55.990002,99.989998,150.000000
+3,test,1234,-431602080.000000,-431602080.000000,-431602080.000000
+4,Test,123,45.000000,75.000000,100.000000

@@ -121,12 +121,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Date.cpp" />
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="Guest.cpp" />
     <ClCompile Include="Hotel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MonthTypes.cpp" />
+    <ClCompile Include="Reservation.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomTypes.cpp" />
+    <ClCompile Include="WorkOrder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Date.h" />
@@ -138,6 +143,7 @@
     <ClInclude Include="Reservation.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomTypes.h" />
+    <ClInclude Include="WorkOrder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MonthTypes.h" />
