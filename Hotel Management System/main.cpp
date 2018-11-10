@@ -3,10 +3,8 @@
 #include "WorkOrder.h"
 #include "Hotel.h"
 #include "guest.h"
+#include "Employee.h"
 #include "Menu.h"
-
-
-
 
 int main() {
 	//init hotels
@@ -21,12 +19,14 @@ int main() {
 	//init reservations
 	Reservation **reservations = (Reservation**)malloc(0);
 	int reservation_count = load_reservations_from_file(&reservations,rooms,room_count,guests,guest_count);
-	//init employees
 	//init work orders
 	WorkOrder **work_orders = (WorkOrder**)malloc(0);
-	int work_order_count = load_work_orders_from_file(&work_orders,hotels,hotel_count);
+	int work_order_count = load_work_orders_from_file(&work_orders, hotels, hotel_count);
+	//init employees
+	Employee **employees = (Employee**)malloc(0);
+	int employee_count = load_employees_from_file(&employees, hotels, hotel_count, work_orders, work_order_count);
 
 	while (true) {
-		display_enterprise_management_menu(&hotels, &hotel_count, &rooms, &room_count,&work_orders,&work_order_count,&reservations,&reservation_count,&guests,&guest_count);
+		display_enterprise_management_menu(&hotels, &hotel_count, &rooms, &room_count,&work_orders,&work_order_count,&reservations,&reservation_count,&guests,&guest_count,&employees,&employee_count);
 	}
 }

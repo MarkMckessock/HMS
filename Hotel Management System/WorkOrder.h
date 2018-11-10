@@ -9,6 +9,8 @@
 #ifndef WORKORDER
 #define WORKORDER
 
+typedef struct Employee;
+
 typedef struct WorkOrder {
 	char* name;
 	int id;
@@ -26,6 +28,10 @@ int get_hotel_work_orders(WorkOrder **work_orders, int work_order_count, Hotel *
 void user_create_work_order(Hotel* hotel, WorkOrder ***work_orders, int *work_order_count);
 
 void create_work_order(Hotel *hotel, WorkOrder ***work_order, int *work_order_count, char* name, char *description);
+
+WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, int id);
+
+void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index);
 
 #endif // !WORKORDER
 

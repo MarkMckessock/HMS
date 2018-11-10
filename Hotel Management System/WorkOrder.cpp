@@ -79,3 +79,19 @@ void create_work_order(Hotel *hotel, WorkOrder ***work_orders, int *work_order_c
 	(*work_order_count)++;
 	save_work_orders_to_file(*work_orders, *work_order_count);
 }
+
+WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, int id) {
+	for (int i = 0; i < work_order_count; i++) {
+		if (work_orders[i]->id == id)
+			return work_orders[i];
+	}
+}
+
+void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index) {
+	free((*work_orders)[index]);
+	for (int i = index; i < (*work_order_count) - 1; i++) {
+		(*work_orders)[i] = (*work_orders)[i + 1];
+	}
+	(*work_order_count)--;
+	*work_orders = (WorkOrder**)realloc(*work_orders, (*work_order_count) * sizeof(WorkOrder*));
+}
