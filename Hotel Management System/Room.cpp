@@ -18,14 +18,23 @@ void create_room(Hotel *hotel,int number,RoomType type, Room ***rooms, int *room
 }
 
 void user_create_room(Hotel *hotel,int number,Room ***rooms,int *room_count) {
+	system("cls");
 	if (number) {
 		printf("Create Room #%i for hotel \"%s\":\n", number, hotel->name);
 	}
 	else {
-		printf("Create Room for hotel \"%s\":\n", hotel->name);
+		printf("Create Room for hotel \"%s\": (Hit 'Enter' to go back)\n", hotel->name);
 		printf("Please enter room number:");
-		number = get_int();
+		char *num_str = get_string();
+		if (!strcmp(num_str, "")) {
+			return;
+		}
+		else {
+			number = atoi(num_str);
+		}
+
 	}
+	system("cls");
 	printf("Please choose room type:\n(1)\tSingle\n(2)\tDouble\n(3)\tSuite\n");
 	int choice = get_int();
 	RoomType type;
@@ -51,7 +60,6 @@ void user_create_all_rooms(Room ***rooms, int *room_count, Hotel *hotel, int hot
 }
 
 bool get_room_status(Room *room,Reservation **reservations,int reservation_count,Date date) {
-	//TODO
 	for (int i = 0; i < reservation_count; i++) {
 		if (reservations[i]->room == room)
 			if (is_before(reservations[i]->start, date) && is_before(date, reservations[i]->end))
@@ -60,7 +68,7 @@ bool get_room_status(Room *room,Reservation **reservations,int reservation_count
 	return true;
 }
 
-void edit_room(Room *room) {
+void edit_room(Room *room,Room **rooms,int room_count) {
 	printf("Edit Hotel %s: Room #%i\n", room->hotel->name, room->number);
 	printf("Choose room style:\n");
 	printf("(1) Single\n");
@@ -81,16 +89,24 @@ void edit_room(Room *room) {
 	case 4:
 		break;
 	}
+	save_rooms_to_file(rooms, room_count);
 }
 
-void delete_room_by_index(Room ***rooms, int *room_count, int index) {
+void delete_room_by_index(Room ***rooms, int *room_count, int index,Reservation ***reservations,int *reservation_count) {
 	//deletes the specified room and removes it from the array
+	for (int i = 0; i < *reservation_count; i++) {
+		if ((*reservations)[i]->room == (*rooms)[index]) {
+			delete_reservation_by_index(reservations, reservation_count, i);
+			i--;
+		}
+	}
 	free((*rooms)[index]);
 	for (int i = index; i < (*room_count) - 1; i++) {
 		(*rooms)[i] = (*rooms)[i + 1];
 	}
 	(*room_count)--;
 	*rooms = (Room**)realloc(*rooms, (*room_count) * sizeof(Room*));
+	save_rooms_to_file(*rooms, *room_count);
 }
 
 void save_rooms_to_file(Room **rooms, int room_count) {

@@ -4,6 +4,8 @@
 #include <string>
 #include "func.h"
 
+struct Reservation;
+
 typedef struct Guest{
 	const char *first_name;
 	const char *last_name;
@@ -22,3 +24,5 @@ int load_guests_from_file(Guest ***guests);
 void save_guests_to_file(Guest **guests, int guest_count);
 
 void user_create_guest(Guest ***guests, int *guest_count);
+
+void delete_guest(Guest ***guests, int *guest_count, int index, Reservation ***reservations, int *reservation_count);

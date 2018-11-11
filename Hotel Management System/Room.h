@@ -16,7 +16,7 @@ typedef struct Room {
 	RoomType type;
 } Room;
 
-void create_room(Room ***rooms, int *room_count, Hotel *hotel, int number, RoomType type);
+void create_room(Hotel *hotel, int number, RoomType type, Room ***rooms, int *room_count);
 
 void user_create_room(Hotel *hotel, int number, Room ***rooms, int *room_count);
 
@@ -24,9 +24,9 @@ void user_create_all_rooms(Room ***rooms, int *room_count, Hotel *hotel, int hot
 
 bool get_room_status(Room *room, Reservation **reservations, int reservation_count, Date date);
 
-void delete_room_by_index(Room ***rooms, int *room_count, int index);
+void delete_room_by_index(Room ***rooms, int *room_count, int index, Reservation ***reservations, int *reservation_count);
 
-void edit_room(Room *room);
+void edit_room(Room *room, Room **rooms, int room_count);
 
 void save_rooms_to_file(Room **rooms, int room_count);
 

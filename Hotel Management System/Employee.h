@@ -4,7 +4,8 @@
 #include "func.h"
 #include "Role.h"
 #include "Hotel.h"
-#include "WorkOrder.h"
+
+struct WorkOrder;
 
 typedef struct Employee {
 	char *first_name;
@@ -34,4 +35,6 @@ Employee* get_work_order_employee(WorkOrder *work_order, Employee **employees, i
 
 void assign_workorder(WorkOrder *work_order, Employee *employee, Employee **employees, int employee_count);
 
-void delete_employee(Employee ***employees, int *employee_count, int index);
+void delete_employee_by_index(Employee ***employees, int *employee_count, int index);
+
+void delete_employee_by_id(Employee ***employees, int *employee_count, int id);

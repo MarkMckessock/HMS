@@ -1,4 +1,5 @@
 #include "Employee.h"
+#include "WorkOrder.h"
 
 void save_employees_to_file(Employee **employees, int employee_count) {
 	FILE *fp;
@@ -72,12 +73,16 @@ void create_employee(Employee ***employees, int *employee_count, char *first_nam
 	*employees = (Employee**)realloc(*employees, (1 + *employee_count) * sizeof(Employee*));
 	(*employees)[*employee_count] = employee;
 	(*employee_count)++;
+	save_employees_to_file(*employees, *employee_count);
 }
 
 void user_create_employee(Employee ***employees, int *employee_count, Hotel *hotel) {
+	system("cls");
 	printf("Create Employee:\n");
-	printf("Please enter a first name:\n");
+	printf("Please enter a first name: (Hit 'enter' to go back)\n");
 	char *first_name = get_string();
+	if (!strcmp(first_name, ""))
+		return;
 	printf("Please enter a last name:\n");
 	char *last_name = get_string();
 	printf("Please enter a salary for this employee:\n$");
@@ -122,11 +127,23 @@ Employee* get_work_order_employee(WorkOrder *work_order, Employee **employees, i
 	return NULL;
 }
 
-void delete_employee(Employee ***employees, int *employee_count, int index) {
+void delete_employee_by_index(Employee ***employees, int *employee_count, int index) {
+	if ((*employees)[index]->role == admin) {
+		printf("Cannot delete 'admin' employee.\n");
+		system("pause");
+		return;
+	}
 	free((*employees)[index]);
 	for (int i = index; i < (*employee_count) - 1; i++) {
 		(*employees)[i] = (*employees)[i + 1];
 	}
 	(*employee_count)--;
 	*employees = (Employee**)realloc(*employees, (*employee_count) * sizeof(Employee*));
+	save_employees_to_file(*employees, *employee_count);
+}
+
+void delete_employee_by_id(Employee ***employees, int *employee_count, int id) {
+	for (int i = 0; i < *employee_count; i++)
+		if ((*employees)[i]->id == id)
+			delete_employee_by_index(employees, employee_count, i);
 }

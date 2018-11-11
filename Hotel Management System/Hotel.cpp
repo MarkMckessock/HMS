@@ -17,6 +17,7 @@ Hotel* create_hotel(Hotel ***hotels, int *hotel_count,const char* name, const ch
 	*hotels = (Hotel **)realloc(*hotels, (*hotel_count+1) * sizeof(Hotel*));
 	(*hotels)[*hotel_count] = hotel;
 	(*hotel_count)++;
+	save_hotels_to_file(*hotels, *hotel_count);
 	return hotel;
 }
 
@@ -64,6 +65,7 @@ int load_hotels_from_file(Hotel ***hotels) {
 }
 
 void user_create_hotel(Hotel ***hotels, int *hotel_count,Room ***rooms,int *room_count) {
+	system("cls");
 	printf("Create a new hotel:\n");
 	printf("Enter hotel name:");
 	char *name = get_string();
@@ -76,11 +78,9 @@ void user_create_hotel(Hotel ***hotels, int *hotel_count,Room ***rooms,int *room
 	printf("Enter Suite Rate:\n$");
 	float suite_rate = get_float();
 	Hotel *hotel = create_hotel(hotels, hotel_count, name, address,single_rate,double_rate,suite_rate);
-	save_hotels_to_file(*hotels, *hotel_count);
 	printf("Enter number of rooms:");
 	int hotel_room_count = get_int();
 	user_create_all_rooms(rooms, room_count, hotel, hotel_room_count);
-	
 }
 
 void display_hotel(Hotel *hotel,Room **rooms,int room_count) {
@@ -90,6 +90,8 @@ void display_hotel(Hotel *hotel,Room **rooms,int room_count) {
 }
 
 void display_all_hotels(Hotel **hotels, int hotel_count,Room **rooms,int room_count) {
+	system("cls");
+	printf("Hotel List:\n");
 	for (int i = 0; i < hotel_count; i++) {
 		display_hotel(hotels[i],rooms,room_count);
 	}
@@ -140,6 +142,7 @@ void delete_hotel_by_index(Hotel ***hotels, int *hotel_count, int index) {
 	}
 	(*hotel_count)--;
 	*hotels = (Hotel**)realloc(*hotels, (*hotel_count) * sizeof(Hotel*));
+	save_hotels_to_file(*hotels, *hotel_count);
 }
 
 Hotel* get_hotel_by_id(Hotel **hotels, int hotel_count, int id) {

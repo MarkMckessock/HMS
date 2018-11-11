@@ -22,3 +22,9 @@ int get_hotel_reservations(Reservation **reservations, int reservation_count, Ho
 void user_create_reservation(Guest **guests, int guest_count, Reservation ***reservations, int *reservation_count, Hotel *hotel, Room **rooms, int room_count);
 
 void create_reservation(Reservation ***reservations, int *reservation_count, Guest *guest, Room *room, Date start, Date end);
+
+void delete_reservation_by_index(Reservation ***reservations, int *reservation_count, int index);
+
+void delete_reservation_by_id(Reservation ***reservations, int *reservation_count, int id);
+
+void checkout_reservation(Reservation *reservation, Reservation ***reservations, int *reservation_count);

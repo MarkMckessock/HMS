@@ -52,3 +52,22 @@ Date create_date(int day, Month month, int year) {
 	date.year = year;
 	return date;
 }
+
+int get_date_difference(Date date_1, Date date_2) {
+	struct tm date1, date2;
+	date1.tm_year = date_1.year - 1900;
+	date1.tm_mday = date_1.day;
+	date1.tm_mon = date_1.month;
+	date1.tm_sec = 0;
+	date1.tm_min = 0;
+	date1.tm_hour = 0;
+	date2.tm_year = date_2.year - 1900;
+	date2.tm_mday = date_2.day;
+	date2.tm_mon = date_2.month;
+	date2.tm_sec = 0;
+	date2.tm_min = 0;
+	date2.tm_hour = 0;
+	double seconds = difftime(mktime(&date1), mktime(&date2));
+	int days = (fabs(seconds) / (float)86400)+1;
+	return days;
+}

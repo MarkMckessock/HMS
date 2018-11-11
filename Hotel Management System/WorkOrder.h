@@ -4,12 +4,13 @@
 #include "func.h"
 #include "MonthTypes.h"
 #include "Hotel.h"
+#include "Employee.h"
 #include <time.h>
 
 #ifndef WORKORDER
 #define WORKORDER
 
-typedef struct Employee;
+struct Employee;
 
 typedef struct WorkOrder {
 	char* name;
@@ -31,7 +32,7 @@ void create_work_order(Hotel *hotel, WorkOrder ***work_order, int *work_order_co
 
 WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, int id);
 
-void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index);
+void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index, Employee **employees, int employee_count);
 
 #endif // !WORKORDER
 

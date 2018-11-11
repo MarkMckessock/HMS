@@ -73,12 +73,16 @@ void create_reservation(Reservation ***reservations, int *reservation_count,Gues
 }
 
 void user_create_reservation(Guest **guests,int guest_count,Reservation ***reservations,int *reservation_count,Hotel *hotel,Room **rooms,int room_count) {
+	system("cls");
 	printf("Create reservation:\n");
 	//get guest
 	printf("Choose a guest:\n");
 	for (int i = 0; i < guest_count; i++)
 		printf("(%i) Guest: %s, %s\n", i + 1, guests[i]->last_name, guests[i]->first_name);
+	printf("(%i) Go Back\n", guest_count + 1);
 	int choice = get_int();
+	if (choice == guest_count + 1)
+		return;
 	Guest* guest = guests[choice - 1];
 
 	//get dates
@@ -153,5 +157,36 @@ void user_create_reservation(Guest **guests,int guest_count,Reservation ***reser
 	else {
 		printf("There are no rooms available for this period.\n");
 		system("pause");
+	}
+}
+
+void delete_reservation_by_index(Reservation ***reservations, int *reservation_count, int index) {
+	free((*reservations)[index]);
+	for (int i = index; i < (*reservation_count) - 1; i++) {
+		(*reservations)[i] = (*reservations)[i + 1];
+	}
+	(*reservation_count)--;
+	*reservations = (Reservation**)realloc(*reservations, (*reservation_count) * sizeof(Reservation*));
+	save_reservations_to_file(*reservations, *reservation_count);
+}
+
+void delete_reservation_by_id(Reservation ***reservations, int *reservation_count, int id) {
+	for (int i = 0; i < *reservation_count; i++)
+		if ((*reservations)[i]->id == id)
+			delete_reservation_by_index(reservations, reservation_count, i);
+	save_reservations_to_file(*reservations, *reservation_count);
+}
+
+void checkout_reservation(Reservation *reservation,Reservation ***reservations,int *reservation_count) {
+	int days = get_date_difference(reservation->start, reservation->end);
+	float price = days * (reservation->room->type == single_bed ? reservation->room->hotel->single_rate : (reservation->room->type == double_bed ? reservation->room->hotel->double_rate : reservation->room->hotel->suite_rate));
+	printf("Check-Out Reservation #%i: Guest: %s, %s Room: #%i\n", reservation->id, reservation->guest->last_name, reservation->guest->first_name, reservation->room->number);
+	printf("\tPrice for %i %s: $%0.2f\n", days, days > 1 ? "days" : "day", price);
+	printf("Accept transaction and close reservation (y/n):");
+	char *choice = get_string();
+	if (choice[0] == 'y' || choice[0] == 'Y') {
+		printf("Transaction Complete.\n");
+		system("pause");
+		delete_reservation_by_id(reservations, reservation_count, reservation->id);
 	}
 }

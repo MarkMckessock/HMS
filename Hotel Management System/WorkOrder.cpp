@@ -58,8 +58,11 @@ int get_hotel_work_orders(WorkOrder **work_orders, int work_order_count, Hotel *
 }
 
 void user_create_work_order(Hotel* hotel, WorkOrder ***work_orders, int *work_order_count){
-	printf("Please enter a short name for this work-order:\n");
+	system("cls");
+	printf("Please enter a short name for this work-order: (Hit 'enter' to go back)\n");
 	char *name = get_string();
+	if (!strcmp(name, ""))
+		return;
 	printf("Please enter a short description:\n");
 	char *description = get_string();
 	create_work_order(hotel, work_orders, work_order_count, name, description);
@@ -87,11 +90,15 @@ WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, i
 	}
 }
 
-void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index) {
+void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index,Employee **employees,int employee_count) {
+	for (int i = 0; i < employee_count; i++)
+		if (employees[i]->task == (*work_orders)[index])
+			employees[i]->task = NULL;
 	free((*work_orders)[index]);
 	for (int i = index; i < (*work_order_count) - 1; i++) {
 		(*work_orders)[i] = (*work_orders)[i + 1];
 	}
 	(*work_order_count)--;
 	*work_orders = (WorkOrder**)realloc(*work_orders, (*work_order_count) * sizeof(WorkOrder*));
+	save_work_orders_to_file(*work_orders, *work_order_count);
 }

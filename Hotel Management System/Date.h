@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include "func.h"
+#include <math.h>
 
 typedef struct Date {
 	int day;
@@ -20,3 +21,5 @@ Date create_date_from_string(char *str);
 bool is_before(Date date_1, Date date_2);
 
 Date create_date(int day, Month month, int year);
+
+int get_date_difference(Date date_1, Date date_2);

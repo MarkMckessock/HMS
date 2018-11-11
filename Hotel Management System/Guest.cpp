@@ -1,4 +1,5 @@
 #include "guest.h"
+#include "Reservation.h"
 
 Guest* get_guest_by_id(Guest **guests, int guest_count, int id) {
 	for (int i = 0; i < guest_count; i++) {
@@ -66,9 +67,12 @@ void create_guest(Guest ***guests, int *guest_count, char *first_name, char *las
 }
 
 void user_create_guest(Guest ***guests, int *guest_count) {
+	system("cls");
 	printf("Create new guest:\n");
-	printf("Please enter first name:\n");
+	printf("Please enter first name (Hit 'enter' to go back):\n");
 	char *first_name = get_string();
+	if (!strcmp(first_name, ""))
+		return;
 	printf("Please enter last name:\n");
 	char *last_name = get_string();
 	printf("Enter guest age:\n");
@@ -78,4 +82,19 @@ void user_create_guest(Guest ***guests, int *guest_count) {
 	printf("Please enter a password for this user:\n");
 	char *password = get_string();
 	create_guest(guests, guest_count, first_name, last_name, age,username,password);
+}
+
+void delete_guest(Guest ***guests, int *guest_count, int index,Reservation ***reservations,int *reservation_count) {
+	for (int i = 0; i < *reservation_count; i++)
+		if ((*reservations)[i]->guest == (*guests)[index]) {
+			delete_reservation_by_index(reservations, reservation_count, i);
+			i--;
+		}
+	free((*guests)[index]);
+	for (int i = index; i < (*guest_count) - 1; i++) {
+		(*guests)[i] = (*guests)[i + 1];
+	}
+	(*guest_count)--;
+	*guests = (Guest**)realloc(*guests, (*guest_count) * sizeof(Guest*));
+	save_guests_to_file(*guests, *guest_count);
 }
