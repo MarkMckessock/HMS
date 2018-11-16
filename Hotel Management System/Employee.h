@@ -1,9 +1,7 @@
 #pragma once
-#include <stdio.h>
-#include <string>
-#include "func.h"
 #include "Role.h"
 #include "Hotel.h"
+#include "guest.h"
 
 struct WorkOrder;
 
@@ -25,11 +23,9 @@ void save_employees_to_file(Employee **employees, int employee_count);
 
 int get_hotel_employees(Hotel *hotel, Employee **employees, int employee_count, Employee ***result);
 
-void user_create_employee(Employee ***employees, int *employee_count, Hotel *hotel);
+void user_create_employee(Employee ***employees, int *employee_count, Hotel *hotel, Guest **guests, int guest_count);
 
 void create_employee(Employee ***employees, int *employee_count, char *first_name, char *last_name, float salary, char *username, char *password, Hotel* hotel, Role role);
-
-Employee** get_unassigned_employees(Employee **employees, int employee_count);
 
 Employee* get_work_order_employee(WorkOrder *work_order, Employee **employees, int employee_count);
 

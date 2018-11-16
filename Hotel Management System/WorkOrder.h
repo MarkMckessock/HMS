@@ -34,5 +34,7 @@ WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, i
 
 void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index, Employee **employees, int employee_count);
 
+void delete_work_order_by_id(WorkOrder ***work_orders, int *work_order_count, int id, Employee **employees, int emplyee_count);
+
 #endif // !WORKORDER
 

@@ -1,6 +1,9 @@
 #include "WorkOrder.h"
+#include <string>
 
 int load_work_orders_from_file(WorkOrder ***work_orders,Hotel **hotels,int hotel_count) {
+	//load work orders from file and parse them into an array
+	//return number of work orders found
 	int work_order_count = 0, i = 0;
 	FILE *fp;
 	fopen_s(&fp, "work_orders.txt", "r");
@@ -36,6 +39,7 @@ int load_work_orders_from_file(WorkOrder ***work_orders,Hotel **hotels,int hotel
 }
 
 void save_work_orders_to_file(WorkOrder **work_orders, int work_order_count) {
+	//save all work orders to file
 	FILE *fp;
 	fopen_s(&fp, "work_orders.txt", "w");
 	fprintf(fp, "Work Order Count: %i\n", work_order_count);
@@ -45,6 +49,7 @@ void save_work_orders_to_file(WorkOrder **work_orders, int work_order_count) {
 }
 
 int get_hotel_work_orders(WorkOrder **work_orders, int work_order_count, Hotel *hotel, WorkOrder ***result) {
+	//get all work orders assigned to a given hotel
 	int count = 0;
 	*result = (WorkOrder**)malloc(0);
 	for (int i = 0; i < work_order_count; i++) {
@@ -58,19 +63,21 @@ int get_hotel_work_orders(WorkOrder **work_orders, int work_order_count, Hotel *
 }
 
 void user_create_work_order(Hotel* hotel, WorkOrder ***work_orders, int *work_order_count){
-	system("cls");
+	//prompt user for information to create work order
+	clear();
 	printf("Please enter a short name for this work-order: (Hit 'enter' to go back)\n");
-	char *name = get_string();
+	char *name = get_string("Work Order Name");
 	if (!strcmp(name, ""))
 		return;
 	printf("Please enter a short description:\n");
-	char *description = get_string();
+	char *description = get_string("Description");
 	create_work_order(hotel, work_orders, work_order_count, name, description);
 	printf("Work Order Created.\n");
-	system("pause");
+	pause();
 }
 
 void create_work_order(Hotel *hotel, WorkOrder ***work_orders, int *work_order_count, char* name, char *description) {
+	//create work order from given data
 	WorkOrder *work_order = (WorkOrder*)malloc(sizeof(WorkOrder));
 	work_order->name = name;
 	work_order->description = description;
@@ -84,6 +91,7 @@ void create_work_order(Hotel *hotel, WorkOrder ***work_orders, int *work_order_c
 }
 
 WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, int id) {
+	//get the work order with the given id and return a pointer to it
 	for (int i = 0; i < work_order_count; i++) {
 		if (work_orders[i]->id == id)
 			return work_orders[i];
@@ -91,6 +99,7 @@ WorkOrder* get_work_order_by_id(WorkOrder **work_orders, int work_order_count, i
 }
 
 void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count, int index,Employee **employees,int employee_count) {
+	//delete a work order from the array by index
 	for (int i = 0; i < employee_count; i++)
 		if (employees[i]->task == (*work_orders)[index])
 			employees[i]->task = NULL;
@@ -101,4 +110,11 @@ void delete_work_order_by_index(WorkOrder ***work_orders, int *work_order_count,
 	(*work_order_count)--;
 	*work_orders = (WorkOrder**)realloc(*work_orders, (*work_order_count) * sizeof(WorkOrder*));
 	save_work_orders_to_file(*work_orders, *work_order_count);
+}
+
+void delete_work_order_by_id(WorkOrder ***work_orders, int *work_order_count, int id, Employee **employees, int emplyee_count) {
+	//delete the specified work order by id
+	for (int i = 0; i < *work_order_count; i++)
+		if ((*work_orders)[i]->id == id)
+			delete_work_order_by_index(work_orders, work_order_count, i, employees, emplyee_count);
 }

@@ -1,8 +1,6 @@
 #pragma once
 #include "RoomTypes.h"	
 #include "Hotel.h"
-#include <string.h>
-#include "Date.h"
 #include "Reservation.h"
 
 #ifndef ROOM
@@ -33,5 +31,7 @@ void save_rooms_to_file(Room **rooms, int room_count);
 int load_rooms_from_file(Room ***rooms, Hotel **hotels, int hotel_count);
 
 Room* get_room_by_id(Room **rooms, int room_count, int id);
+
+void delete_room_by_id(Room ***rooms, int *rooms_count, Reservation ***reservations, int *reservation_count, int id);
 
 #endif // !ROOM

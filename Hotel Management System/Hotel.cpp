@@ -22,6 +22,7 @@ Hotel* create_hotel(Hotel ***hotels, int *hotel_count,const char* name, const ch
 }
 
 void save_hotels_to_file(Hotel **hotels, int hotel_count) {
+	//save all hotels to file
 	FILE *fp;
 	fopen_s(&fp,"hotels.txt", "w");
 	fprintf(fp, "Hotel Count: %i\n", hotel_count);
@@ -31,6 +32,8 @@ void save_hotels_to_file(Hotel **hotels, int hotel_count) {
 }
 
 int load_hotels_from_file(Hotel ***hotels) {
+	//load hotels from file and parse into array
+	//return number of hotel found
 	int hotel_count = 0, i = 0;
 	FILE *fp;
 	fopen_s(&fp,"hotels.txt", "r");
@@ -65,12 +68,15 @@ int load_hotels_from_file(Hotel ***hotels) {
 }
 
 void user_create_hotel(Hotel ***hotels, int *hotel_count,Room ***rooms,int *room_count) {
-	system("cls");
+	//prompt user for data to create a hotel
+	int hotel_room_count;
+	bool success;
+	clear();
 	printf("Create a new hotel:\n");
 	printf("Enter hotel name:");
-	char *name = get_string();
+	char *name = get_string("Hotel Name");
 	printf("Enter hotel address:");
-	char *address = get_string();
+	char *address = get_string("Address");
 	printf("Enter Single Room Rate:\n$");
 	float single_rate = get_float();
 	printf("Enter Double Room Rate:\n$");
@@ -79,23 +85,29 @@ void user_create_hotel(Hotel ***hotels, int *hotel_count,Room ***rooms,int *room
 	float suite_rate = get_float();
 	Hotel *hotel = create_hotel(hotels, hotel_count, name, address,single_rate,double_rate,suite_rate);
 	printf("Enter number of rooms:");
-	int hotel_room_count = get_int();
+	do {
+		hotel_room_count = get_int(&success);
+		if (!success)
+			printf("Invalid Choice\n");
+	} while (!success);
 	user_create_all_rooms(rooms, room_count, hotel, hotel_room_count);
 }
 
 void display_hotel(Hotel *hotel,Room **rooms,int room_count) {
+	//print data pertaining to a hotel
 	Room ***ptr = (Room***)malloc(0);
 	printf("Hotel #%i: %s [%s]\n", hotel->id, hotel->name, hotel->address);
 	printf("\t%i Rooms: %i Singles @ $%0.2f, %i Doubles @ $%0.2f, %i Suites @ $%0.2f.\n\n", get_hotel_rooms(hotel, (RoomType)-1, rooms, room_count, ptr), get_hotel_rooms(hotel, single_bed, rooms, room_count, ptr), hotel->single_rate, get_hotel_rooms(hotel, double_bed, rooms, room_count, ptr),hotel->double_rate, get_hotel_rooms(hotel, suite, rooms, room_count, ptr),hotel->suite_rate);
 }
 
 void display_all_hotels(Hotel **hotels, int hotel_count,Room **rooms,int room_count) {
-	system("cls");
+	//print all hotels in array
+	clear();
 	printf("Hotel List:\n");
 	for (int i = 0; i < hotel_count; i++) {
 		display_hotel(hotels[i],rooms,room_count);
 	}
-	system("pause");
+	pause();
 }
 
 int get_hotel_rooms(Hotel *hotel, RoomType type,Room **rooms,int room_count,Room *** result) {
@@ -146,6 +158,7 @@ void delete_hotel_by_index(Hotel ***hotels, int *hotel_count, int index) {
 }
 
 Hotel* get_hotel_by_id(Hotel **hotels, int hotel_count, int id) {
+	//get the hotel with a specific id and return a pointer to it
 	for (int i = 0; i < hotel_count; i++)
 		if (hotels[i]->id == id)
 			return hotels[i];

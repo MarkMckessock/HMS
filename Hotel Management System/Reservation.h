@@ -2,8 +2,6 @@
 #include "Room.h"
 #include "Date.h"
 #include "guest.h"
-#include <stdio.h>
-#include "func.h"
 
 typedef struct Reservation {
 	Room *room;
@@ -19,7 +17,7 @@ int load_reservations_from_file(Reservation ***reservations, Room **rooms, int r
 
 int get_hotel_reservations(Reservation **reservations, int reservation_count, Hotel *hotel, Reservation ***result);
 
-void user_create_reservation(Guest **guests, int guest_count, Reservation ***reservations, int *reservation_count, Hotel *hotel, Room **rooms, int room_count);
+void user_create_reservation(Guest **guests, int guest_count, Guest *guest, Reservation ***reservations, int *reservation_count, Hotel **hotels, int hotel_count, Hotel *hotel, Room **rooms, int room_count);
 
 void create_reservation(Reservation ***reservations, int *reservation_count, Guest *guest, Room *room, Date start, Date end);
 
@@ -28,3 +26,5 @@ void delete_reservation_by_index(Reservation ***reservations, int *reservation_c
 void delete_reservation_by_id(Reservation ***reservations, int *reservation_count, int id);
 
 void checkout_reservation(Reservation *reservation, Reservation ***reservations, int *reservation_count);
+
+int get_guest_reservations(Reservation **reservations, int reservation_count, Guest *guest, Reservation ***result);

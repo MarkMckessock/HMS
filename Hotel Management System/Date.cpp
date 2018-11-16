@@ -1,6 +1,12 @@
 #include "Date.h"
+#include <string.h>
+#include <time.h>
+#include "func.h"
+#include <math.h>
+#include "stdlib.h"
 
 char* print_date(Date date) {
+	//converts a date object to a string in the form "<month name> <day>, <year>"
 	char *str = (char*)malloc(81);
 	strcpy_s(str, 80,month_type_names[date.month]);
 	strcat_s(str, 80, " ");
@@ -15,6 +21,7 @@ char* print_date(Date date) {
 }
 
 Date get_current_date() {
+	//return a date object containing the current date
 	time_t t = time(NULL);
 	struct tm tm; 
 	localtime_s(&tm,&t);
@@ -26,6 +33,7 @@ Date get_current_date() {
 }
 
 Date create_date_from_string(char *str) {
+	//parses a string in the form dd/mm/yy into a date object
 	Date date;
 	int count;
 	char **splits = split(str, "/", &count);
@@ -36,6 +44,7 @@ Date create_date_from_string(char *str) {
 }
 
 bool is_before(Date date_1, Date date_2) {
+	//determine if one date is before another date
 	if (date_1.year < date_2.day) 
 		return 1;
 	if (date_1.year == date_2.year && date_1.month < date_2.month)
@@ -46,6 +55,7 @@ bool is_before(Date date_1, Date date_2) {
 }
 
 Date create_date(int day, Month month, int year) {
+	//create a date object from a day, month and year
 	Date date;
 	date.day = day;
 	date.month = month;
@@ -54,6 +64,7 @@ Date create_date(int day, Month month, int year) {
 }
 
 int get_date_difference(Date date_1, Date date_2) {
+	//determine the number of days between two dates
 	struct tm date1, date2;
 	date1.tm_year = date_1.year - 1900;
 	date1.tm_mday = date_1.day;
@@ -70,4 +81,13 @@ int get_date_difference(Date date_1, Date date_2) {
 	double seconds = difftime(mktime(&date1), mktime(&date2));
 	int days = (fabs(seconds) / (float)86400)+1;
 	return days;
+}
+
+bool date_is_valid(Date date) {
+	//determine if a date is valid based on month and number of days per month
+	if (date.month < 0 || date.month > 11)
+		return false;
+	if (date.day < 1 || date.day > month_day_count[date.month])
+		return false;
+	return true;
 }

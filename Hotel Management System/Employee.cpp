@@ -1,7 +1,11 @@
 #include "Employee.h"
 #include "WorkOrder.h"
+#include <stdio.h>
+#include <string>
+#include "func.h"
 
 void save_employees_to_file(Employee **employees, int employee_count) {
+	//save all employees to file
 	FILE *fp;
 	fopen_s(&fp, "employee.txt", "w");
 	fprintf(fp, "Employee Count: %i\n", employee_count);
@@ -11,6 +15,7 @@ void save_employees_to_file(Employee **employees, int employee_count) {
 }
 
 int load_employees_from_file(Employee ***employees,Hotel **hotels,int hotel_count,WorkOrder **work_orders,int work_order_count) {
+	//load employees from file and parse into array
 	int employee_count = 0, i = 0;
 	FILE *fp;
 	fopen_s(&fp, "employee.txt", "r");
@@ -48,10 +53,11 @@ int load_employees_from_file(Employee ***employees,Hotel **hotels,int hotel_coun
 }
 
 int get_hotel_employees(Hotel *hotel, Employee **employees, int employee_count, Employee ***result) {
+	//get the employees of a specified hotel
 	int count = 0;
 	for (int i = 0; i < employee_count; i++) {
 		if (employees[i]->hotel == hotel) {
-			*result = (Employee**)realloc(*result, (1 + count * sizeof(Employee*)));
+			*result = (Employee**)realloc(*result, (1 + count) * sizeof(Employee*));
 			(*result)[count] = employees[i];
 			count++;
 		}
@@ -60,6 +66,7 @@ int get_hotel_employees(Hotel *hotel, Employee **employees, int employee_count, 
 }
 
 void create_employee(Employee ***employees, int *employee_count, char *first_name, char *last_name, float salary, char *username, char *password, Hotel* hotel, Role role) {
+	//create an employee from the provided arguments and add it to array
 	Employee *employee = (Employee*)malloc(sizeof(Employee));
 	employee->first_name = first_name;
 	employee->last_name = last_name;
@@ -76,26 +83,44 @@ void create_employee(Employee ***employees, int *employee_count, char *first_nam
 	save_employees_to_file(*employees, *employee_count);
 }
 
-void user_create_employee(Employee ***employees, int *employee_count, Hotel *hotel) {
-	system("cls");
+void user_create_employee(Employee ***employees, int *employee_count, Hotel *hotel, Guest **guests,int guest_count) {
+	//prompt user to enter values to create employee
+	bool valid = true;
+	char *username;
+	clear();
 	printf("Create Employee:\n");
+	//get first name
 	printf("Please enter a first name: (Hit 'enter' to go back)\n");
-	char *first_name = get_string();
+	char *first_name = get_string("Name");
+	//check for empty string
 	if (!strcmp(first_name, ""))
 		return;
+	//get last name
 	printf("Please enter a last name:\n");
-	char *last_name = get_string();
+	char *last_name = get_string("Name");
+	//get salary
 	printf("Please enter a salary for this employee:\n$");
 	float salary = get_float();
+	//get username
 	printf("Please choose a username for this employee:\n");
-	char *username = get_string();
+	do {
+		if (!valid) {
+			printf("Username already used. Please choose another.\n");
+		}
+		username = get_string("Name");
+		valid = validate_username(username, guests, guest_count, *employees, *employee_count);
+	} while (!valid);
+	//get password
 	printf("Please choose a password for this employee:\n");
-	char *password = get_string();
+	char *password = get_string("Password");
+	//create employee
 	create_employee(employees, employee_count, first_name, last_name, salary, username, password, hotel, worker);
 	save_employees_to_file(*employees, *employee_count);
 }
 
 void assign_workorder(WorkOrder *work_order, Employee *employee, Employee **employees, int employee_count) {
+	//assign a work order to an employee
+	//de-assign it from any employees it was previously assigned to
 	for (int i = 0; i < employee_count; i++) {
 		if (employees[i]->task == work_order)
 			employees[i]->task = NULL;
@@ -104,22 +129,9 @@ void assign_workorder(WorkOrder *work_order, Employee *employee, Employee **empl
 	save_employees_to_file(employees, employee_count);
 }
 
-Employee** get_unassigned_employees(Employee **employees, int employee_count) {
-	Employee **result = (Employee**)malloc(sizeof(Employee*));
-	result[0] = NULL;
-	int count = 0;
-	for (int i = 0; i < employee_count; i++) {
-		if (employees[i]->task) {
-			result = (Employee**)realloc(result, (2 + count) * sizeof(Employee*));
-			result[count] = employees[i];
-			count++;
-			result[count] = NULL;
-		}
-	}
-	return result;
-}
-
 Employee* get_work_order_employee(WorkOrder *work_order, Employee **employees, int employee_count) {
+	//get the employee assigned to a specified work order
+	//if none is assigned, return NULL
 	for (int i = 0; i < employee_count; i++) {
 		if (employees[i]->task == work_order)
 			return employees[i];
@@ -128,9 +140,10 @@ Employee* get_work_order_employee(WorkOrder *work_order, Employee **employees, i
 }
 
 void delete_employee_by_index(Employee ***employees, int *employee_count, int index) {
+	//delete an employee by index and remove it from the array
 	if ((*employees)[index]->role == admin) {
 		printf("Cannot delete 'admin' employee.\n");
-		system("pause");
+		pause();
 		return;
 	}
 	free((*employees)[index]);
@@ -143,6 +156,7 @@ void delete_employee_by_index(Employee ***employees, int *employee_count, int in
 }
 
 void delete_employee_by_id(Employee ***employees, int *employee_count, int id) {
+	//delete an employee by id and remove it from the array
 	for (int i = 0; i < *employee_count; i++)
 		if ((*employees)[i]->id == id)
 			delete_employee_by_index(employees, employee_count, i);

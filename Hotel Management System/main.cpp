@@ -27,6 +27,7 @@ int main() {
 	int employee_count = load_employees_from_file(&employees, hotels, hotel_count, work_orders, work_order_count);
 
 	while (true) {
+		//open logon screen
 		login_screen(&hotels, &hotel_count, &rooms, &room_count,&work_orders,&work_order_count,&reservations,&reservation_count,&guests,&guest_count,&employees,&employee_count);
 	}
 }
