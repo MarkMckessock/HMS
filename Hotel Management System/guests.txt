@@ -1,7 +1,4 @@
-Guest Count: 6
-1,Mark,Mckessock,18,markmckessock,password
-2,Sean,West,9,swest,password
-3,James,meep,120,bob,james
-4,Dante,Zimmerman,18,DabTe,GAY
-5,mark,thomas,14,test,password
-6,first,last,15,tomm,password
+Guest Count: 3
+1,John,Appleseed,35,jappleseed,password
+2,George,Thompson,20,gthompson,password
+3,Helen,Johannsen,33,hjohannsen,password

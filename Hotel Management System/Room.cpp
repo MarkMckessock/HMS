@@ -26,6 +26,7 @@ void user_create_room(Hotel *hotel,int number,Room ***rooms,int *room_count) {
 	clear();
 	if (number) {//if room number is given, us it
 		printf("Create Room #%i for hotel \"%s\":\n", number, hotel->name);
+		num = number;
 	}
 	else {//if no room number is given, get from user
 			printf("Create Room for hotel \"%s\": (Hit 'Enter' to go back)\n", hotel->name);
@@ -53,7 +54,6 @@ void user_create_room(Hotel *hotel,int number,Room ***rooms,int *room_count) {
 		} while (!valid);
 
 	}
-	clear();
 	//get room type
 	printf("Please choose room type:\n(1)\tSingle\n(2)\tDouble\n(3)\tSuite\n");
 	do {

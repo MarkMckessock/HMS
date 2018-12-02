@@ -104,9 +104,12 @@ void display_all_hotels(Hotel **hotels, int hotel_count,Room **rooms,int room_co
 	//print all hotels in array
 	clear();
 	printf("Hotel List:\n");
-	for (int i = 0; i < hotel_count; i++) {
-		display_hotel(hotels[i],rooms,room_count);
-	}
+	if (hotel_count)
+		for (int i = 0; i < hotel_count; i++) {
+			display_hotel(hotels[i], rooms, room_count);
+		}
+	else
+		printf("No Hotels Found.\n");
 	pause();
 }
 

@@ -109,17 +109,24 @@ void user_create_reservation(Guest **guests,int guest_count, Guest *guest, Reser
 	if (!guest) {
 		//get guest if guest has not been passed
 		printf("Choose a guest:\n");
-		for (int i = 0; i < guest_count; i++)
-			printf("(%i) Guest: %s, %s\n", i + 1, guests[i]->last_name, guests[i]->first_name);
-		printf("(%i) Go Back\n", guest_count + 1);
-		do {
-			choice = get_int(&success);
-			if (!success)
-				printf("Invalid Choice\n");
-		} while (!success);
-		if (choice == guest_count + 1)
+		if (guest_count) {
+			for (int i = 0; i < guest_count; i++)
+				printf("(%i) Guest: %s, %s\n", i + 1, guests[i]->last_name, guests[i]->first_name);
+			printf("(%i) Go Back\n", guest_count + 1);
+			do {
+				choice = get_int(&success);
+				if (!success)
+					printf("Invalid Choice\n");
+			} while (!success);
+			if (choice == guest_count + 1)
+				return;
+			guest = guests[choice - 1];
+		}
+		else {
+			printf("No guests found. Please create one.\n");
+			pause();
 			return;
-		guest = guests[choice - 1];
+		}
 	}
 	else {
 		//get hotel if guest has been specified

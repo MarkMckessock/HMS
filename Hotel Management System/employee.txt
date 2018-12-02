@@ -1,4 +1,4 @@
 Employee Count: 3
-1,Tom,Smith,tsmith,password,1,1,1,25000.000000
-2,Mark,Mckkesssockss,no mooneys,no mooneys,5,0,0,-400.000000
-3,john,appleseed,scott,password,1,0,0,25000.000000
+1,Tom,Smith,tsmith,password,1,2,1,70000.000000
+2,Alex,Watts,awatts,password,1,1,0,40000.000000
+3,Meghan,Patrick,mpatrick,password,2,0,0,37000.000000
